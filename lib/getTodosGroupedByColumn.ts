@@ -17,8 +17,8 @@ export const getTodosGroupByColumn = async () => {
     }
 
     acc.get(todo.status)?.todos.push({
-      $id: todo.id,
-      $createdAt: todo.createdAt,
+      $id: todo.$id,
+      $createdAt: todo.$createdAt,
       $title: todo.title,
       $status: todo.status, // changed from 'status' to '$status'
       ...(todo.image && { image: JSON.parse(todo.image) }),
@@ -41,7 +41,6 @@ export const getTodosGroupByColumn = async () => {
       (a, b) => columnTypes.indexOf(a[0]) - columnTypes.indexOf(b[0])
     )
   );
-  console.log(columns.entries());
 
   const board: Board = {
     columns: sortedColumns,
