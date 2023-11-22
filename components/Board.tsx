@@ -9,10 +9,11 @@ import Column from "./Column";
 import { start } from "repl";
 
 function Board() {
-  const [board, getBoard, setBoard] = useBoardStore((state) => [
+  const [board, getBoard, setBoard, updateTodoInDb] = useBoardStore((state) => [
     state.board,
     state.getBoard,
     state.setBoard,
+    state.updateTodoInDb,
   ]);
   useEffect(() => {
     getBoard();
@@ -25,7 +26,7 @@ function Board() {
     if (type === "column") {
       const entries = Array.from(board.columns.entries());
       const [removed] = entries.splice(source.index, 1);
-      console.log(removed);
+
       entries.splice(destination.index, 0, removed);
       setBoard({ ...board, columns: new Map(entries) });
       console.log(entries);
@@ -33,10 +34,10 @@ function Board() {
     const columns = Array.from(board.columns);
     const startColIndex = columns[Number(source.droppableId)];
     const finishColIndex = columns[Number(destination.droppableId)];
-
+    console.log(startColIndex, finishColIndex);
     const startCol: IColumn = {
-      id: startColIndex[0],
-      todos: startColIndex[1].todos,
+      id: startColIndex?.[0],
+      todos: startColIndex[1]?.todos,
     };
 
     const finishCol: IColumn = {
@@ -46,6 +47,7 @@ function Board() {
 
     if (!startCol || !finishCol) return;
     if (source.index === destination.index && startCol === finishCol) return;
+    console.log(source.index, destination.index);
 
     const newTodos = startCol.todos;
     const [todoMoved] = newTodos.splice(source.index, 1);
@@ -76,6 +78,8 @@ function Board() {
         id: finishCol.id,
         todos: finishTodos,
       });
+
+      updateTodoInDb(todoMoved, finishCol.id);
       setBoard({ ...board, columns: newColumns });
     }
   };
