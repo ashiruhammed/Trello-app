@@ -34,7 +34,7 @@ function Board() {
     const columns = Array.from(board.columns);
     const startColIndex = columns[Number(source.droppableId)];
     const finishColIndex = columns[Number(destination.droppableId)];
-    console.log(startColIndex, finishColIndex);
+    // console.log(startColIndex, finishColIndex);
     const startCol: IColumn = {
       id: startColIndex?.[0],
       todos: startColIndex[1]?.todos,
